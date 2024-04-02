@@ -78,7 +78,7 @@ namespace presentacion
                 cboTipo.ValueMember = "Id";          //se utiliza para presetear un valor
                 cboTipo.DisplayMember = "Descripcion";  //
                 cboDebilidad.DataSource = negocio.listar();
-                cboDebilidad.ValueMember = "Id";
+                cboDebilidad.ValueMember = "Id"; //son los nombres de las propiedades de la clase, en este caso la clase ElementoNegocio
                 cboDebilidad.DisplayMember = "Descripcion";
 
                 //validacion para saber si modifuca o agrega nuevo pokemon:
