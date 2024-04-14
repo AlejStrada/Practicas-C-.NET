@@ -10,13 +10,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dominio;
 using Negocio;
-
+using System.IO;
+using System.Configuration;
 
 namespace presentacion
 {
     public partial class frmAgregarpokemon : Form
     {
         private Pokemon pokemon = null;
+        private OpenFileDialog archivo=null;
         public frmAgregarpokemon()
         {
             InitializeComponent();
@@ -59,6 +61,11 @@ namespace presentacion
                     negocio.agregar(pokemon);
                     MessageBox.Show("Carga de datos exitosa");
                 }
+
+                if (archivo != null && !(txtUrlImagen.Text.ToUpper().Contains("HTTP"))) //si archivo no esta mas nulo y si no contiene http en el texto guardo la imagen en la carpeta
+                {
+                    File.Copy(archivo.FileName, ConfigurationManager.AppSettings["images-folder"] + archivo.SafeFileName);  //ver app config con configuraciones; utilizo el configurationmanager para poder leer las opciones configuradas previamente en appconfig; y le pongo un nombre al archivo en este caso el mismo nombre del file
+                }
                 Close();
             }
 
@@ -81,7 +88,7 @@ namespace presentacion
                 cboDebilidad.ValueMember = "Id"; //son los nombres de las propiedades de la clase, en este caso la clase ElementoNegocio
                 cboDebilidad.DisplayMember = "Descripcion";
 
-                //validacion para saber si modifuca o agrega nuevo pokemon:
+                //validacion para saber si modifica o agrega nuevo pokemon:
 
                  if (pokemon != null) // valido si esta seleccionado o no una linea para precargar los formularios para modificar o para agregar uno nuevo
                 {
@@ -119,5 +126,15 @@ namespace presentacion
 
         }
 
+        private void btnAgregarImagen_Click(object sender, EventArgs e)
+        {
+            archivo = new OpenFileDialog();
+            archivo.Filter = "jpg|*.jpg;|png|*.png"; 
+            if (archivo.ShowDialog() == DialogResult.OK) //si el cuadro de dialogo cargo una imagen y se pulso aceptar
+            {
+                txtUrlImagen.Text = archivo.FileName;
+                cargarImagen(archivo.FileName);
+            }
+        }      
     }
 }
